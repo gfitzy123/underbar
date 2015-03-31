@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -38,7 +39,7 @@
   // last element.
   _.last = function(array, n) {
     if (n > array.length) { return array }
-    return n === undefined ? array[array.length - 1] : array.slice((array.length - n), (array.length));
+    return n === undefined ? array[array.length - 1] : array.slice((n, (array.length));
 
   };
 
@@ -50,28 +51,21 @@
   _.each = function(collection, iterator) {
       if (Array.isArray(collection)) {
         for (var i = 0; i < collection.length; i++) {
-              iterator(collection[i]);
+              iterator(collection[i], i, collection);
         } 
-      } else for (var prop in collection) {
-              iterator(collection[prop]);
+      } else for (var i = 0; i < collection.length; i++) {
+              iterator(collection[i], i, collection);
       }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
-    // TIP: Here's an example of a function that needs to iterate, which we've
-    // implemented for you. Instead of using a standard `for` loop, though,
-    // it uses the iteration helper `each`, which you will need to write.
-    var result = -1;
-
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
-        result = index;
-      }
-    });
-
-    return result;
+      for (var i = 0; i < array.length; i++) {
+        if (array[i] === target) {
+            return i;
+        }
+    } return "-1"
   };
 
   // Return all elements of an array that pass a truth test.
@@ -81,7 +75,7 @@
           if (test(collection[i])) {
               newArray.push(collection[i]);
           } 
-      }
+      } 
         return newArray;
   };
 
@@ -89,31 +83,26 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var filteredArray = _.filter(collection);
-    var unrejectedArray = collection;
-    var rejectedArray = [];
-        for (var i = 0; i < filteredArray.length; i++) {
-            for (var j = 0; j < unrejectedArray.length; j++) {
-              if (unrejectedArray[j] !=== filteredArray[i]) {
-                  rejectedArray.push(unrejectedArray[j]);
-                }  
-            }
-        }
-          return rejectedArray;
+          var newArray = [];
+      for (var i = 0; i < collection.length; i++) {
+          if !(test(collection[i])) {
+              newArray.push(collection[i]);
+          } 
+      } 
+        return newArray;
+  };
+
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-      var uniqueArray = array;
-      for (var i = 0; i < array.length; i++) {
-          for (var j = 1; j < array.length; j++) {
-              if (array[i] === array[j]) {
-                  uniqueArray.splice(array[i]];
-              } 
-          }
-      }
-      return uniqueArray;
-  };
+       return array.reduce(function(array, number) {
+          if (array.indexOf(number) < 0) {
+              array.push(number);
+            }
+              return array;
+        }, []);
+};
 
 
   // Return the results of applying an iterator to each element.
