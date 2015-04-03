@@ -38,8 +38,10 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    var emptyArray = [];
     if (n > array.length) { return array }
-    return n === undefined ? array[array.length - 1] : array.slice((n, (array.length));
+      else if (n === 0) { return emptyArray}
+    return n === undefined ? array[array.length - 1] : array.slice(n, array.length);
 
   };
 
@@ -49,28 +51,35 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
-      if (Array.isArray(collection)) {
+    if (Array.isArray(collection)) {
         for (var i = 0; i < collection.length; i++) {
               iterator(collection[i], i, collection);
         } 
-      } else for (var i = 0; i < collection.length; i++) {
-              iterator(collection[i], i, collection);
+      } else for (var property in collection) {
+              iterator(collection[property], property, collection);
       }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
-      for (var i = 0; i < array.length; i++) {
-        if (array[i] === target) {
-            return i;
-        }
-    } return "-1"
+    // TIP: Here's an example of a function that needs to iterate, which we've
+    // implemented for you. Instead of using a standard `for` loop, though,
+    // it uses the iteration helper `each`, which you will need to write.
+    var result = -1;
+
+    _.each(array, function(item, index) {
+      if (item === target && result === -1) {
+        result = index;
+      }
+    });
+
+    return result;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
-      var newArray = [];
+    var newArray = [];
       for (var i = 0; i < collection.length; i++) {
           if (test(collection[i])) {
               newArray.push(collection[i]);
@@ -83,24 +92,23 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-          var newArray = [];
+      var rejectedArray = [];
       for (var i = 0; i < collection.length; i++) {
-          if !(test(collection[i])) {
-              newArray.push(collection[i]);
+          if (test(collection[i]) === false) {
+              rejectedArray.push(collection[i]);
           } 
       } 
-        return newArray;
-  };
-
+        return rejectedArray;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-       return array.reduce(function(array, number) {
+           var newArray = [];
+    return array._reduce(function(array, number) {
           if (array.indexOf(number) < 0) {
-              array.push(number);
+              newArray.push(number);
             }
-              return array;
+              return newArray;
         }, []);
 };
 
@@ -111,10 +119,10 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var mappedArray = [];
-        for (var i = 0; i < collection.length; i++) {
-          mappedArray.push(iterator(collection[i]);
-        }
-        return mappedArray;
+      for (var i = 0 ; i < collection.length; i++) {
+          mappedArray.push(iterator(collection[i]));
+      }
+      return mappedArray;
   };
 
   /*
@@ -156,15 +164,14 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (arguements.length === 3) { 
-      var counter = accumulator 
-    } else var counter = collection[0]
-
-      for (var i = 0; i < collection.length; i++) {
-          var counter = iterator(counter, collection[i]);
-      }
+              var total = 0;     
 
 
+            for (var i = 0; i < collection.length; i++) {
+                    if (accumulator === undefined) {
+                      total = iterator(collection[i]);
+                    } else 
+            return total;
   };
 
   // Determine if the array or object contains a given value (using `===`).
