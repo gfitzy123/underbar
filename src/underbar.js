@@ -108,9 +108,10 @@
           if (array.indexOf(number) < 0) {
               newArray.push(number);
             }
-              return newArray;
-        }, []);
-};
+            
+        });
+        return newArray;
+};  
 
 
   // Return the results of applying an iterator to each element.
@@ -118,10 +119,11 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+
     var mappedArray = [];
-      for (var i = 0 ; i < collection.length; i++) {
-          mappedArray.push(iterator(collection[i]));
-      }
+      for (var i = 0; i < collection.length; i++) {
+        mappedArray.push(iterator(collection[i]));
+      };
       return mappedArray;
   };
 
@@ -164,14 +166,25 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-              var total = 0;     
+             var result;
+    
+            if (arguments.length === 3) {
+              result = accumulator
+            } else {
+                result = collection[0];
+                var newCollection = [];
+                for (var i = 1; i < collection.length; i++) {
+                  newCollection.push(collection[i]);
+                }
+                collection = newCollection;
+            }
 
+            for (var j = 0; j < collection.length; j++){
+                result = iterator(result, collection[j]);
+            }
 
-            for (var i = 0; i < collection.length; i++) {
-                    if (accumulator === undefined) {
-                      total = iterator(collection[i]);
-                    } else 
-            return total;
+            return result;
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
