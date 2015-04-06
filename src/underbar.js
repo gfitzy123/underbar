@@ -38,12 +38,13 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    var emptyArray = [];
+   var emptyArray = [];
     if (n > array.length) { return array }
-      else if (n === 0) { return emptyArray}
-    return n === undefined ? array[array.length - 1] : array.slice(n, array.length);
-
+     else if (n === 0) { return emptyArray}
+    return (n === undefined) ? array[array.length - 1] : array.slice(n-1, array.length);
+    
   };
+
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
@@ -251,6 +252,14 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+        _.each(arguments, function(object) {
+            _.each(object, function(value, property) {
+                    if(!obj.hasOwnProperty(property)) {
+                      obj[property] = value;
+                    }
+              })
+          })
+      return obj;
   };
 
 
@@ -294,6 +303,16 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var alreadyCalled = [];
+    var result;
+
+    return function(argument) {
+      if (_.indexOf(alreadyCalled, argument) < 0) {
+        result = func.apply(this, arguments);
+        alreadyCalled.push(argument);
+      }
+      return result;
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -303,6 +322,9 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
+        var arguments2 = Array.prototype.slice.call(arguments, 2)
+      setTimeout(function() { func.apply(this, arguments2); }, wait);
   };
 
 
