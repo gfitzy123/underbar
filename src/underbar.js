@@ -165,39 +165,47 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-             var result;
+           // Check if there is an initialValue by checking if accumulator is defined
     
-            if (arguments.length === 3) {
-              result = accumulator
-            } else {
-                result = collection[0];
-                var newCollection = [];
-                for (var i = 1; i < collection.length; i++) {
-                  newCollection.push(collection[i]);
+   
+    var keys = Object.keys(collection)
+    var arrayOfValues = [];
+    for (var property in collection) {
+        arrayOfValues.push(collection[property])
+    }
+    
+    accumulator === undefined ? accumulator = arrayOfValues[0] : accumulator;
+    
+    if (accumulator === arrayOfValues[0]) {
+     var newCollection = [];
+                for (var i = 1; i < arrayOfValues.length; i++) {
+                  newCollection.push(arrayOfValues[i]);
                 }
-                collection = newCollection;
-            }
-
-            for (var j = 0; j < collection.length; j++){
-                result = iterator(result, collection[j]);
-            }
-
-            return result;
-
+                arrayOfValues = newCollection;
+                
+    }
+            
+    for (var k = 0; k < arrayOfValues.length; k++) {
+        console.log(arrayOfValues)
+        accumulator = iterator(accumulator, arrayOfValues[k])
+       
+    }
+    
+    return accumulator;
+    
   };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-   return _.reduce(collection, function(wasFound, item) {
+    return _.reduce(collection, function(wasFound, item) {
       if (wasFound) {
         return true;
       }
       return item === target;
     }, false);
   };
-
 
 
   // Determine whether all of the elements match a truth test.
